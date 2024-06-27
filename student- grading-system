@@ -1,0 +1,100 @@
+student- grading-system
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+// Class representing a food item
+class FoodItem {
+    private String name;
+    private double price;
+    
+    public FoodItem(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public double getPrice() {
+        return price;
+    }
+}
+
+// Class representing a restaurant
+class Restaurant {
+    private String name;
+    private Map<String, FoodItem> menu;
+    
+    public Restaurant(String name) {
+        this.name = name;
+        this.menu = new HashMap<>();
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public void addToMenu(String itemName, double price) {
+        menu.put(itemName, new FoodItem(itemName, price));
+    }
+    
+    public Map<String, FoodItem> getMenu() {
+        return menu;
+    }
+}
+
+// Class representing the food delivery application
+public class MyFavourite {
+    private List<Restaurant> restaurants;
+    
+    public MyFavourite() {
+        this.restaurants = new ArrayList<>();
+    }
+    
+    public void addRestaurant(Restaurant restaurant) {
+        restaurants.add(restaurant);
+    }
+    
+    public List<Restaurant> getRestaurants() {
+        return restaurants;
+    }
+    
+    public static void main(String[] args) {
+        MyFavourite myFavouriteApp = new MyFavourite();
+        
+        // Creating restaurants and adding them to the app
+        Restaurant restaurant1 = new Restaurant("Tasty Bites");
+        restaurant1.addToMenu("Pizza", 10.99);
+        restaurant1.addToMenu("Burger", 8.49);
+        myFavouriteApp.addRestaurant(restaurant1);
+        
+        Restaurant restaurant2 = new Restaurant("Spice Valley");
+        restaurant2.addToMenu("Chicken Curry", 12.99);
+        restaurant2.addToMenu("Vegetable Biryani", 9.99);
+        myFavouriteApp.addRestaurant(restaurant2);
+        
+        // Simulating user interaction
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to MyFavourite Food Delivery App!");
+        System.out.println("Choose a restaurant:");
+        for (int i = 0; i < myFavouriteApp.getRestaurants().size(); i++) {
+            System.out.println((i + 1) + ". " + myFavouriteApp.getRestaurants().get(i).getName());
+        }
+        int choice = scanner.nextInt();
+        Restaurant selectedRestaurant = myFavouriteApp.getRestaurants().get(choice - 1);
+        
+        System.out.println("Menu for " + selectedRestaurant.getName() + ":");
+        Map<String, FoodItem> menu = selectedRestaurant.getMenu();
+        for (String itemName : menu.keySet()) {
+            System.out.println(itemName + " - $" + menu.get(itemName).getPrice());
+        }
+        
+        // Additional functionality can be added here, such as placing an order
+        
+        scanner.close();
+    }
+}
