@@ -1,0 +1,152 @@
+student-registration-system
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+class Course {
+    String courseId;
+    String courseName;
+
+    Course(String courseId, String courseName) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+    }
+
+    @Override
+    public String toString() {
+        return courseId + ": " + courseName;
+    }
+}
+
+class Student {
+    String studentId;
+    String studentName;
+    ArrayList<Course> registeredCourses;
+
+    Student(String studentId, String studentName) {
+        this.studentId = studentId;
+        this.studentName = studentName;
+        this.registeredCourses = new ArrayList<>();
+    }
+
+    void registerCourse(Course course) {
+        registeredCourses.add(course);
+    }
+
+    void removeCourse(String courseId) {
+        registeredCourses.removeIf(course -> course.courseId.equals(courseId));
+    }
+
+    @Override
+    public String toString() {
+        return studentId + ": " + studentName;
+    }
+}
+
+public class CourseRegistrationSystem {
+    private static HashMap<String, Course> courseDatabase = new HashMap<>();
+    private static HashMap<String, Student> studentDatabase = new HashMap<>();
+
+    public static void main(String[] args) {
+        initializeData();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("1. List Courses");
+            System.out.println("2. Register Student to Course");
+            System.out.println("3. Remove Course from Student");
+            System.out.println("4. List Student Courses");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();  // Consume newline
+
+            switch (choice) {
+                case 1:
+                    listCourses();
+                    break;
+                case 2:
+                    registerStudentToCourse(scanner);
+                    break;
+                case 3:
+                    removeCourseFromStudent(scanner);
+                    break;
+                case 4:
+                    listStudentCourses(scanner);
+                    break;
+                case 5:
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+
+    private static void initializeData() {
+        courseDatabase.put("CSE101", new Course("CSE101", "Introduction to Computer Science"));
+        courseDatabase.put("MAT101", new Course("MAT101", "Calculus I"));
+        courseDatabase.put("PHY101", new Course("PHY101", "Physics I"));
+
+        studentDatabase.put("S1001", new Student("S1001", "Alice"));
+        studentDatabase.put("S1002", new Student("S1002", "Bob"));
+    }
+
+    private static void listCourses() {
+        System.out.println("Available Courses:");
+        for (Course course : courseDatabase.values()) {
+            System.out.println(course);
+        }
+    }
+
+    private static void registerStudentToCourse(Scanner scanner) {
+        System.out.print("Enter Student ID: ");
+        String studentId = scanner.nextLine();
+        Student student = studentDatabase.get(studentId);
+        if (student == null) {
+            System.out.println("Student not found!");
+            return;
+        }
+
+        System.out.print("Enter Course ID: ");
+        String courseId = scanner.nextLine();
+        Course course = courseDatabase.get(courseId);
+        if (course == null) {
+            System.out.println("Course not found!");
+            return;
+        }
+
+        student.registerCourse(course);
+        System.out.println("Course registered successfully!");
+    }
+
+    private static void removeCourseFromStudent(Scanner scanner) {
+        System.out.print("Enter Student ID: ");
+        String studentId = scanner.nextLine();
+        Student student = studentDatabase.get(studentId);
+        if (student == null) {
+            System.out.println("Student not found!");
+            return;
+        }
+
+        System.out.print("Enter Course ID to remove: ");
+        String courseId = scanner.nextLine();
+        student.removeCourse(courseId);
+        System.out.println("Course removed successfully!");
+    }
+
+    private static void listStudentCourses(Scanner scanner) {
+        System.out.print("Enter Student ID: ");
+        String studentId = scanner.nextLine();
+        Student student = studentDatabase.get(studentId);
+        if (student == null) {
+            System.out.println("Student not found!");
+            return;
+        }
+
+        System.out.println("Courses registered by " + student.studentName + ":");
+        for (Course course : student.registeredCourses) {
+            System.out.println(course);
+       }
+    }
+}
